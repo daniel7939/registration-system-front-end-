@@ -1,12 +1,12 @@
 // src/pages/Login.jsx
 import { useState, useContext } from "react";
 import axios from "../api/axios";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import { motion } from "framer-motion";
 import { Mail, Lock, LogIn, GraduationCap } from "lucide-react";
 
-function Login() {
+function Login({ onToggleView }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(null);
@@ -80,9 +80,20 @@ function Login() {
 
                     <div style={{ marginTop: "30px", fontSize: "0.95rem" }}>
                         <span style={{ color: "var(--text-muted)" }}>New student? </span>
-                        <Link to="/signup" style={{ color: "var(--primary)", textDecoration: "none", fontWeight: "600" }}>
+                        <button 
+                            onClick={onToggleView}
+                            style={{ 
+                                background: "none", 
+                                border: "none", 
+                                color: "var(--primary)", 
+                                cursor: "pointer", 
+                                fontWeight: "600",
+                                padding: 0,
+                                fontSize: "inherit"
+                            }}
+                        >
                             Create Account
-                        </Link>
+                        </button>
                     </div>
                 </div>
             </motion.div>

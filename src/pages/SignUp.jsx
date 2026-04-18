@@ -1,19 +1,17 @@
 // src/pages/SignUp.jsx
 import { useState } from "react";
 import axios from "../api/axios";
-import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { UserPlus, Mail, Lock, User, GraduationCap, Building2 } from "lucide-react";
 import { DEPARTMENTS } from "../constants/departments";
 
-function SignUp() {
+function SignUp({ onToggleView }) {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [department, setDepartment] = useState(DEPARTMENTS[0]);
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(null);
-    const navigate = useNavigate();
 
     const handleSignUp = (e) => {
         e.preventDefault();
@@ -22,8 +20,8 @@ function SignUp() {
         
         axios.post("/auth/signup", { name, email, password, department })
             .then((response) => {
-                setSuccess("Account created securely! Redirecting...");
-                setTimeout(() => navigate("/login"), 2000);
+                setSuccess("Account created securely! Switching to Login...");
+                setTimeout(() => onToggleView(), 2000);
             })
             .catch((err) => {
                 setError(err.response?.data?.error || "Sign Up failed. Please try again.");
@@ -114,9 +112,20 @@ function SignUp() {
 
                     <div style={{ marginTop: "30px", fontSize: "0.95rem" }}>
                         <span style={{ color: "var(--text-muted)" }}>Already registered? </span>
-                        <Link to="/login" style={{ color: "var(--primary)", textDecoration: "none", fontWeight: "600" }}>
+                        <button 
+                            onClick={onToggleView}
+                            style={{ 
+                                background: "none", 
+                                border: "none", 
+                                color: "var(--primary)", 
+                                cursor: "pointer", 
+                                fontWeight: "600",
+                                padding: 0,
+                                fontSize: "inherit"
+                            }}
+                        >
                             Login Here
-                        </Link>
+                        </button>
                     </div>
                 </div>
             </motion.div>
