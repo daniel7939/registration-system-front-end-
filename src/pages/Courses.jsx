@@ -7,6 +7,7 @@ import { DEPARTMENTS } from "../constants/departments";
 
 function Courses() {
     const [courses, setCourses] = useState([]);
+    const [myEnrolledIds, setMyEnrolledIds] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedDept, setSelectedDept] = useState("All Departments");
     const { request, loading, error, success } = useApi();
@@ -15,6 +16,10 @@ function Courses() {
         try {
             const data = await request("GET", "/courses");
             setCourses(data);
+            
+            // Also fetch current status to find enrolled IDs
+            const statusData = await request("GET", "/courses/status");
+            setMyEnrolledIds(statusData.map(c => c.id));
         } catch (e) { /* error handled by hook */ }
     };
 
@@ -118,13 +123,28 @@ function Courses() {
                                 <Info size={20} style={{ color: "var(--text-muted)", cursor: "help" }} />
                             </div>
                             
-                            <button 
-                                onClick={() => handleRegister(course.id)}
-                                style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "10px" }}
-                            >
-                                <BookPlus size={18} />
-                                Register Now
-                            </button>
+                            {myEnrolledIds.includes(course.id) ? (
+                                <div style={{ 
+                                    background: "rgba(16, 185, 129, 0.1)", 
+                                    color: "#10b981", 
+                                    padding: "14px", 
+                                    borderRadius: "12px", 
+                                    textAlign: "center",
+                                    fontWeight: "600",
+                                    marginTop: "25px",
+                                    border: "1px solid rgba(16, 185, 129, 0.2)"
+                                }}>
+                                    ✓ Enrolled
+                                </div>
+                            ) : (
+                                <button 
+                                    onClick={() => handleRegister(course.id)}
+                                    style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "10px" }}
+                                >
+                                    <BookPlus size={18} />
+                                    Register Now
+                                </button>
+                            )}
                         </motion.div>
                     ))
                 )}

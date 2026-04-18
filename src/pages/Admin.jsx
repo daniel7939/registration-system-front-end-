@@ -21,6 +21,7 @@ import { DEPARTMENTS } from "../constants/departments";
 function Admin() {
     const [stats, setStats] = useState({ students: 0, courses: 0, registrations: 0 });
     const [allCourses, setAllCourses] = useState([]);
+    const [distribution, setDistribution] = useState([]);
     
     // Form States
     const [name, setName] = useState("");
@@ -37,6 +38,8 @@ function Admin() {
             setStats(statsData);
             const courseData = await request("GET", "/courses");
             setAllCourses(courseData);
+            const distData = await request("GET", "/admin/distribution");
+            setDistribution(distData);
         } catch (e) { /* Error handled by hook */ }
     };
 
@@ -106,6 +109,40 @@ function Admin() {
                     <Activity size={32} color="#10b981" style={{ margin: "0 auto 10px" }} />
                     <div style={{ fontSize: "2rem", fontWeight: "800" }}>{stats.registrations}</div>
                     <div style={{ color: "var(--text-muted)", fontSize: "0.9rem" }}>Full Enrollments</div>
+                </div>
+            </div>
+
+            {/* Distribution Chart */}
+            <div className="container" style={{ marginBottom: "40px", padding: "30px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "25px" }}>
+                    <Users size={20} color="var(--primary)" />
+                    <span style={{ fontWeight: "600" }}>Student Population by Department</span>
+                </div>
+                
+                <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+                    {distribution.map((item, index) => {
+                        const percentage = (item.count / (stats.students || 1)) * 100;
+                        return (
+                            <div key={item.department}>
+                                <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.85rem", marginBottom: "8px", color: "var(--text-muted)" }}>
+                                    <span>{item.department}</span>
+                                    <span>{item.count} Students ({Math.round(percentage)}%)</span>
+                                </div>
+                                <div style={{ height: "12px", background: "rgba(255,255,255,0.05)", borderRadius: "6px", overflow: "hidden" }}>
+                                    <motion.div 
+                                        initial={{ width: 0 }}
+                                        animate={{ width: `${percentage}%` }}
+                                        transition={{ duration: 1, delay: index * 0.1 }}
+                                        style={{ 
+                                            height: "100%", 
+                                            background: `linear-gradient(to right, var(--primary), var(--secondary))`,
+                                            boxShadow: "0 0 10px var(--primary)"
+                                        }}
+                                    />
+                                </div>
+                            </div>
+                        );
+                    })}
                 </div>
             </div>
 

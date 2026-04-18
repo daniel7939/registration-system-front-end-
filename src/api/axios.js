@@ -9,8 +9,8 @@ const instance = axios.create({
 
 // INTERCEPTOR: Before every single request goes out, run this function!
 instance.interceptors.request.use((config) => {
-    // 1. Dig into Local Storage to find our VIP Pass
-    const token = localStorage.getItem('token');
+    // 1. Dig into Session Storage to find our VIP Pass
+    const token = sessionStorage.getItem('token');
     
     // 2. If we have one, glue it to the 'Authorization' Header of the outgoing request!
     if (token) {

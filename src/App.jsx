@@ -11,6 +11,7 @@ import Profile from "./pages/Profile";
 import Login from "./pages/Login";
 import Admin from "./pages/Admin";
 import SignUp from "./pages/SignUp";
+import StudentDirectory from "./pages/StudentDirectory";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
             <Route index element={<Dashboard />} />
             <Route path="courses" element={<Courses />} />
             <Route path="admin" element={<ProtectedRoute requireAdmin={true}><Admin /></ProtectedRoute>} />
+            <Route path="admin/students" element={<ProtectedRoute requireAdmin={true}><StudentDirectory /></ProtectedRoute>} />
             <Route path="registration" element={<Registration />} />
             <Route path="profile" element={<Profile />} />
           </Route>
