@@ -19,7 +19,7 @@ function Dashboard() {
 
     useEffect(() => {
         fetchMyStatus();
-    }, []); 
+    }, []);
 
     const handleDrop = async (courseId) => {
         try {
@@ -34,10 +34,10 @@ function Dashboard() {
                 <div>
                     <h2>Student Dashboard</h2>
                     <p style={{ marginBottom: "30px", fontSize: "1.1rem", color: "var(--text-muted)" }}>
-                    Oversee your current academic schedule and registration activities.
+                        Oversee your current academic schedule and registration activities.
                     </p>
                 </div>
-                <button 
+                <button
                     onClick={() => window.print()}
                     style={{ width: "auto", margin: 0, padding: "12px 24px", background: "rgba(255,255,255,0.05)", border: "1px solid var(--card-border)", display: "flex", alignItems: "center", gap: "10px" }}
                 >
@@ -48,10 +48,10 @@ function Dashboard() {
 
             {/* Hidden header visible only during print */}
             <div className="print-header">
-                <h1 style={{ color: "black", marginBottom: "5px" }}>OFFICIAL ACADEMIC TRANSCRIPT</h1>
+                <h1 style={{ color: "#fff", marginBottom: "5px" }}>OFFICIAL ACADEMIC TRANSCRIPT</h1>
                 <p style={{ color: "#666" }}>University Enrollment System - Semester 2026</p>
                 <div style={{ margin: "20px 0", borderTop: "1px solid #000", borderBottom: "1px solid #000", padding: "10px 0", textAlign: "left" }}>
-                    <strong>Student Name:</strong> {user?.name || "Academic User"}<br/>
+                    <strong>Student Name:</strong> {user?.name || "Academic User"}<br />
                     <strong>Date of Issue:</strong> {new Date().toLocaleDateString()}
                 </div>
             </div>
@@ -82,15 +82,15 @@ function Dashboard() {
             {success && <div className="alert alert-success">{success}</div>}
             {error && <div className="alert alert-error">{error}</div>}
 
-            <motion.div 
+            <motion.div
                 className="grid"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5 }}
             >
                 {myCourses.map((course) => (
-                    <motion.div 
-                        className="card" 
+                    <motion.div
+                        className="card"
                         key={course.id}
                         layout
                         initial={{ scale: 0.9, opacity: 0 }}
@@ -108,7 +108,7 @@ function Dashboard() {
                             </div>
                             <BookOpen size={24} style={{ color: "var(--primary)", opacity: 0.5 }} />
                         </div>
-                        <button 
+                        <button
                             className="btn-danger"
                             onClick={() => handleDrop(course.id)}
                             style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px" }}
@@ -121,7 +121,7 @@ function Dashboard() {
             </motion.div>
 
             {myCourses.length === 0 && !loading && !error && (
-                <motion.div 
+                <motion.div
                     initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     style={{ textAlign: "center", padding: "60px", color: "var(--text-muted)", background: "var(--surface)", borderRadius: "24px", border: "1px dashed rgba(255,255,255,0.1)" }}

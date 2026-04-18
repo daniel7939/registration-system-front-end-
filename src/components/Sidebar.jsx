@@ -14,7 +14,7 @@ import {
   Moon
 } from "lucide-react";
 
-function Sidebar() {
+function Sidebar({ isOpen, onClose }) {
   const { user, logout } = useContext(AuthContext);
   const { theme, toggleTheme } = useContext(ThemeContext);
   const location = useLocation();
@@ -22,7 +22,7 @@ function Sidebar() {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <aside className="sidebar">
+    <aside className={`sidebar ${isOpen ? "open" : ""}`}>
       <div className="sidebar-logo">
         <GraduationCap size={32} />
         <span>UniPortal</span>
@@ -32,6 +32,7 @@ function Sidebar() {
         <Link 
           to="/" 
           className={`sidebar-link ${isActive("/") ? "active" : ""}`}
+          onClick={onClose}
         >
           <LayoutDashboard size={20} />
           <span>Dashboard</span>
@@ -40,6 +41,7 @@ function Sidebar() {
         <Link 
           to="/courses" 
           className={`sidebar-link ${isActive("/courses") ? "active" : ""}`}
+          onClick={onClose}
         >
           <BookOpen size={20} />
           <span>Courses</span>
@@ -48,6 +50,7 @@ function Sidebar() {
         <Link 
           to="/profile" 
           className={`sidebar-link ${isActive("/profile") ? "active" : ""}`}
+          onClick={onClose}
         >
           <User size={20} />
           <span>Profile</span>
@@ -61,6 +64,7 @@ function Sidebar() {
             <Link 
               to="/admin" 
               className={`sidebar-link ${isActive("/admin") ? "active" : ""}`}
+              onClick={onClose}
             >
               <ShieldCheck size={20} />
               <span>Analytics</span>
@@ -68,6 +72,7 @@ function Sidebar() {
             <Link 
               to="/admin/students" 
               className={`sidebar-link ${isActive("/admin/students") ? "active" : ""}`}
+              onClick={onClose}
             >
               <Users size={20} />
               <span>Students</span>
@@ -79,7 +84,10 @@ function Sidebar() {
       <div className="sidebar-footer">
         {/* Theme Toggle */}
         <button 
-          onClick={toggleTheme}
+          onClick={() => {
+            toggleTheme();
+            onClose();
+          }}
           className="sidebar-link"
           style={{ 
             width: "100%", 
@@ -103,7 +111,10 @@ function Sidebar() {
           </div>
         )}
         <button 
-          onClick={logout} 
+          onClick={() => {
+            logout();
+            onClose();
+          }} 
           className="sidebar-link btn-logout" 
           style={{ width: "100%", cursor: "pointer" }}
         >
