@@ -1,17 +1,19 @@
 // src/pages/SignUp.jsx
 import { useState } from "react";
 import axios from "../api/axios";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { UserPlus, Mail, Lock, User, GraduationCap, Building2 } from "lucide-react";
 import { DEPARTMENTS } from "../constants/departments";
 
-function SignUp({ onToggleView }) {
+function SignUp() {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [department, setDepartment] = useState(DEPARTMENTS[0]);
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(null);
+    const navigate = useNavigate();
 
     const handleSignUp = (e) => {
         e.preventDefault();
@@ -21,7 +23,7 @@ function SignUp({ onToggleView }) {
         axios.post("/auth/signup", { name, email, password, department })
             .then((response) => {
                 setSuccess("Account created securely! Switching to Login...");
-                setTimeout(() => onToggleView(), 2000);
+                setTimeout(() => navigate("/login"), 2000);
             })
             .catch((err) => {
                 setError(err.response?.data?.error || "Sign Up failed. Please try again.");
@@ -86,7 +88,7 @@ function SignUp({ onToggleView }) {
                             >
                                 {DEPARTMENTS.map(dept => (
                                     <option key={dept} value={dept}>{dept}</option>
-                                ))}
+                                )) }
                             </select>
                         </div>
                         
@@ -113,7 +115,7 @@ function SignUp({ onToggleView }) {
                     <div style={{ marginTop: "30px", fontSize: "0.95rem" }}>
                         <span style={{ color: "var(--text-muted)" }}>Already registered? </span>
                         <button 
-                            onClick={onToggleView}
+                            onClick={() => navigate("/login")}
                             style={{ 
                                 background: "none", 
                                 border: "none", 

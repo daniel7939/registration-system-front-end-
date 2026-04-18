@@ -6,7 +6,7 @@ import { AuthContext } from "../context/AuthContext";
 import { motion } from "framer-motion";
 import { Mail, Lock, LogIn, GraduationCap } from "lucide-react";
 
-function Login({ onToggleView }) {
+function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(null);
@@ -81,7 +81,7 @@ function Login({ onToggleView }) {
                     <div style={{ marginTop: "30px", fontSize: "0.95rem" }}>
                         <span style={{ color: "var(--text-muted)" }}>New student? </span>
                         <button 
-                            onClick={onToggleView}
+                            onClick={() => navigate("/signup")}
                             style={{ 
                                 background: "none", 
                                 border: "none", 
