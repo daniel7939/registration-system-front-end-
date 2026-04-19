@@ -1,15 +1,17 @@
 // src/pages/Courses.jsx
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useApi } from "../hooks/useApi";
+import { AuthContext } from "../context/AuthContext";
 import { motion } from "framer-motion";
-import { Search, BookPlus, Info, Building2 } from "lucide-react";
+import { Search, BookPlus, Info, Building2, ShieldAlert, GraduationCap } from "lucide-react";
 import { DEPARTMENTS } from "../constants/departments";
 
 function Courses() {
     const [courses, setCourses] = useState([]);
-    const [myEnrolledIds, setMyEnrolledIds] = useState([]);
+    const [myCourses, setMyCourses] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedDept, setSelectedDept] = useState("All Departments");
+    const { user } = useContext(AuthContext);
     const { request, loading, error, success } = useApi();
 
     const fetchCourses = async () => {
@@ -17,9 +19,9 @@ function Courses() {
             const data = await request("GET", "/courses");
             setCourses(data);
             
-            // Also fetch current status to find enrolled IDs
+            // Also fetch current status to find enrolled IDs and calculate credits
             const statusData = await request("GET", "/courses/status");
-            setMyEnrolledIds(statusData.map(c => c.id));
+            setMyCourses(statusData);
         } catch (e) { /* error handled by hook */ }
     };
 
@@ -28,10 +30,15 @@ function Courses() {
     }, []);
 
     const handleRegister = async (courseId) => {
+        if (user?.role === "admin") return;
         try {
             await request("POST", "/registrations", { courseId });
+            fetchCourses(); // Refresh to show "Enrolled" and update credits
         } catch (e) { /* error handled by hook */ }
     };
+
+    const myEnrolledIds = myCourses.map(c => c.id);
+    const totalCredits = myCourses.reduce((sum, c) => sum + (Number(c.credits) || 0), 0);
 
     const filteredCourses = courses.filter(c => {
         const matchesSearch = c.name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -55,10 +62,45 @@ function Courses() {
 
     return (
         <div>
-            <h2>Course Catalog</h2>
-            <p style={{ marginBottom: "30px", fontSize: "1.1rem", color: "var(--text-muted)" }}>
-               Discover and enroll in upcoming specialized semester courses.
-            </p>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "30px" }}>
+                <div>
+                    <h2>Course Catalog</h2>
+                    <p style={{ color: "var(--text-muted)", fontSize: "1.1rem" }}>
+                       Discover and enroll in upcoming specialized semester courses.
+                    </p>
+                </div>
+                
+                {user?.role !== "admin" && (
+                    <div style={{ 
+                        background: "var(--surface)", 
+                        padding: "15px 25px", 
+                        borderRadius: "20px", 
+                        border: "1px solid var(--card-border)",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "15px",
+                        boxShadow: "0 10px 30px rgba(0,0,0,0.1)"
+                    }}>
+                        <div style={{ 
+                            width: "40px", 
+                            height: "40px", 
+                            borderRadius: "12px", 
+                            background: totalCredits >= 35 ? "rgba(239, 68, 68, 0.1)" : "rgba(6, 182, 212, 0.1)", 
+                            display: "flex", 
+                            alignItems: "center", 
+                            justifyContent: "center" 
+                        }}>
+                            <GraduationCap size={20} color={totalCredits >= 35 ? "#ef4444" : "var(--primary)"} />
+                        </div>
+                        <div>
+                            <div style={{ fontSize: "0.75rem", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "1px" }}>Current Load</div>
+                            <div style={{ fontSize: "1.2rem", fontWeight: "800", color: totalCredits >= 35 ? "#ef4444" : "white" }}>
+                                {totalCredits} / 35 <span style={{ fontSize: "0.85rem", fontWeight: "400", color: "var(--text-muted)" }}>Credits</span>
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </div>
 
             {/* Controls Bar */}
             <div style={{ display: "grid", gridTemplateColumns: "1.5fr 1fr", gap: "20px", marginBottom: "40px" }}>
@@ -123,7 +165,25 @@ function Courses() {
                                 <Info size={20} style={{ color: "var(--text-muted)", cursor: "help" }} />
                             </div>
                             
-                            {myEnrolledIds.includes(course.id) ? (
+                            {user?.role === "admin" ? (
+                                <div style={{ 
+                                    background: "rgba(255, 255, 255, 0.05)", 
+                                    color: "var(--text-muted)", 
+                                    padding: "14px", 
+                                    borderRadius: "12px", 
+                                    textAlign: "center",
+                                    fontSize: "0.85rem",
+                                    marginTop: "25px",
+                                    border: "1px solid var(--card-border)",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    gap: "8px"
+                                }}>
+                                    <ShieldAlert size={16} />
+                                    Admin View Only
+                                </div>
+                            ) : myEnrolledIds.includes(course.id) ? (
                                 <div style={{ 
                                     background: "rgba(16, 185, 129, 0.1)", 
                                     color: "#10b981", 
@@ -139,10 +199,18 @@ function Courses() {
                             ) : (
                                 <button 
                                     onClick={() => handleRegister(course.id)}
-                                    style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "10px" }}
+                                    disabled={totalCredits >= 35}
+                                    style={{ 
+                                        display: "flex", 
+                                        alignItems: "center", 
+                                        justifyContent: "center", 
+                                        gap: "10px",
+                                        opacity: totalCredits >= 35 ? 0.5 : 1,
+                                        cursor: totalCredits >= 35 ? "not-allowed" : "pointer"
+                                    }}
                                 >
                                     <BookPlus size={18} />
-                                    Register Now
+                                    {totalCredits >= 35 ? "Limit Reached" : "Register Now"}
                                 </button>
                             )}
                         </motion.div>

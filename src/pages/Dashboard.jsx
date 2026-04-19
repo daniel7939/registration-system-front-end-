@@ -2,8 +2,9 @@
 import { useState, useEffect, useContext } from "react";
 import { useApi } from "../hooks/useApi";
 import { AuthContext } from "../context/AuthContext";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Trash2, BookOpen, Clock } from "lucide-react";
+import { Trash2, BookOpen, Clock, ShieldCheck } from "lucide-react";
 
 function Dashboard() {
     const [myCourses, setMyCourses] = useState([]);
@@ -27,6 +28,22 @@ function Dashboard() {
             fetchMyStatus(); // Refresh magically
         } catch (e) { /* Error handled by hook */ }
     };
+
+    if (user?.role === "admin") {
+        return (
+            <div style={{ textAlign: "center", padding: "100px 20px" }}>
+                <ShieldCheck size={64} style={{ color: "var(--primary)", marginBottom: "20px", opacity: 0.5 }} />
+                <h2>Admin Control Center</h2>
+                <p style={{ color: "var(--text-muted)", marginBottom: "40px" }}>
+                    Welcome back, Administrator. Please use the sidebar to manage students and view analytics.
+                </p>
+                <div style={{ display: "flex", gap: "20px", justifyContent: "center" }}>
+                    <Link to="/admin" className="btn" style={{ width: "auto" }}>Go to Analytics</Link>
+                    <Link to="/admin/students" className="btn" style={{ width: "auto", background: "var(--surface)" }}>Manage Students</Link>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div>

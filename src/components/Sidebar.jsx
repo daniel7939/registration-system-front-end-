@@ -29,23 +29,27 @@ function Sidebar({ isOpen, onClose }) {
       </div>
 
       <nav className="sidebar-links">
-        <Link 
-          to="/" 
-          className={`sidebar-link ${isActive("/") ? "active" : ""}`}
-          onClick={onClose}
-        >
-          <LayoutDashboard size={20} />
-          <span>Dashboard</span>
-        </Link>
+        {user?.role !== "admin" && (
+          <>
+            <Link 
+              to="/" 
+              className={`sidebar-link ${isActive("/") ? "active" : ""}`}
+              onClick={onClose}
+            >
+              <LayoutDashboard size={20} />
+              <span>Dashboard</span>
+            </Link>
 
-        <Link 
-          to="/courses" 
-          className={`sidebar-link ${isActive("/courses") ? "active" : ""}`}
-          onClick={onClose}
-        >
-          <BookOpen size={20} />
-          <span>Courses</span>
-        </Link>
+            <Link 
+              to="/courses" 
+              className={`sidebar-link ${isActive("/courses") ? "active" : ""}`}
+              onClick={onClose}
+            >
+              <BookOpen size={20} />
+              <span>Courses</span>
+            </Link>
+          </>
+        )}
 
         <Link 
           to="/profile" 
