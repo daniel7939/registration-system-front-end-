@@ -9,10 +9,10 @@ function Profile() {
     if (!user) return null;
 
     return (
-        <div>
-            <h2>Student Profile</h2>
+        <div className="profile-page">
+            <h2>{user.role === 'admin' ? 'Admin' : 'Student'} Profile</h2>
             <p style={{ marginBottom: "30px", fontSize: "1.1rem", color: "var(--text-muted)" }}>
-               Manage your academic identity and account security.
+               Manage your {user.role === 'admin' ? 'system administrator' : 'academic'} identity and account security.
             </p>
 
             <div className="profile-grid" style={{ gap: "40px", alignItems: "start" }}>
@@ -45,7 +45,7 @@ function Profile() {
                                 <div style={{ background: "white", padding: "8px", borderRadius: "10px" }}>
                                     <CreditCard color="var(--primary)" size={20} />
                                 </div>
-                                <span style={{ color: "white", fontWeight: "800", letterSpacing: "1px", fontSize: "0.9rem" }}>STUDENT PASS</span>
+                                <span style={{ color: "white", fontWeight: "800", letterSpacing: "1px", fontSize: "0.9rem" }}>{user.role === 'admin' ? 'ADMIN' : 'STUDENT'} PASS</span>
                             </div>
                             <ShieldCheck color="white" size={24} />
                         </div>
@@ -98,7 +98,7 @@ function Profile() {
                         <ShieldCheck color="#10b981" />
                         <div>
                             <div style={{ color: "#10b981", fontWeight: "600" }}>Identity Verified</div>
-                            <div style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>Your student credentials are cryptographically secured by Supabase Auth.</div>
+                            <div style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>Your {user.role === 'admin' ? 'admin' : 'student'} credentials are cryptographically secured by Supabase Auth.</div>
                         </div>
                     </div>
                 </div>
