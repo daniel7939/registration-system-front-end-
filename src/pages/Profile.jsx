@@ -15,12 +15,14 @@ function Profile() {
                Manage your academic identity and account security.
             </p>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1.5fr", gap: "40px", alignItems: "start" }}>
+            <div className="profile-grid" style={{ gap: "40px", alignItems: "start" }}>
                 
                 {/* Virtual ID Card */}
                 <motion.div 
                     initial={{ rotateY: -20, opacity: 0 }}
                     animate={{ rotateY: 0, opacity: 1 }}
+                    whileHover={{ scale: 1.02, rotateY: 5 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
                     style={{ perspective: "1000px" }}
                 >
                     <div style={{ 
@@ -67,29 +69,29 @@ function Profile() {
                     </h3>
 
                     <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: "15px", padding: "15px", background: "rgba(255,255,255,0.03)", borderRadius: "12px" }}>
+                        <motion.div whileHover={{ x: 5 }} style={{ display: "flex", alignItems: "center", gap: "15px", padding: "15px", background: "rgba(255,255,255,0.03)", borderRadius: "12px", border: "1px solid var(--card-border)" }}>
                             <Mail size={20} color="var(--text-muted)" />
                             <div>
                                 <div style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>Verified Email Address</div>
                                 <div style={{ fontWeight: "500" }}>{user.email}</div>
                             </div>
-                        </div>
+                        </motion.div>
 
-                        <div style={{ display: "flex", alignItems: "center", gap: "15px", padding: "15px", background: "rgba(255,255,255,0.03)", borderRadius: "12px" }}>
+                        <motion.div whileHover={{ x: 5 }} style={{ display: "flex", alignItems: "center", gap: "15px", padding: "15px", background: "rgba(255,255,255,0.03)", borderRadius: "12px", border: "1px solid var(--card-border)" }}>
                             <Building2 size={20} color="var(--text-muted)" />
                             <div>
                                 <div style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>Primary Department</div>
                                 <div style={{ fontWeight: "500" }}>{user.department || "General Sciences"}</div>
                             </div>
-                        </div>
+                        </motion.div>
 
-                        <div style={{ display: "flex", alignItems: "center", gap: "15px", padding: "15px", background: "rgba(255,255,255,0.03)", borderRadius: "12px" }}>
+                        <motion.div whileHover={{ x: 5 }} style={{ display: "flex", alignItems: "center", gap: "15px", padding: "15px", background: "rgba(255,255,255,0.03)", borderRadius: "12px", border: "1px solid var(--card-border)" }}>
                             <Calendar size={20} color="var(--text-muted)" />
                             <div>
                                 <div style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>Registration Date</div>
                                 <div style={{ fontWeight: "500" }}>January 2026 Batch</div>
                             </div>
-                        </div>
+                        </motion.div>
                     </div>
 
                     <div style={{ marginTop: "30px", padding: "20px", background: "rgba(16, 185, 129, 0.05)", border: "1px solid rgba(16, 185, 129, 0.2)", borderRadius: "16px", display: "flex", alignItems: "center", gap: "15px" }}>

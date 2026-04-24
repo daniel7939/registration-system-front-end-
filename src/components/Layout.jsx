@@ -15,22 +15,7 @@ function Layout() {
       <button 
         className="mobile-toggle"
         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-        style={{
-            position: "fixed",
-            top: "20px",
-            right: "20px",
-            zIndex: "2000",
-            width: "50px",
-            height: "50px",
-            borderRadius: "12px",
-            background: "var(--surface)",
-            backdropFilter: "blur(10px)",
-            border: "1px solid var(--card-border)",
-            display: "none", // Controlled by CSS
-            justifyContent: "center",
-            alignItems: "center",
-            boxShadow: "0 10px 20px rgba(0,0,0,0.2)"
-        }}
+        aria-label="Toggle Menu"
       >
         {isSidebarOpen ? <X size={24} color="var(--primary)" /> : <Menu size={24} color="var(--primary)" />}
       </button>

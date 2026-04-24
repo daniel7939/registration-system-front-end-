@@ -22,6 +22,8 @@ function Admin() {
     const [stats, setStats] = useState({ students: 0, courses: 0, registrations: 0 });
     const [allCourses, setAllCourses] = useState([]);
     const [distribution, setDistribution] = useState([]);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [filterDept, setFilterDept] = useState("All");
     
     // Form States
     const [name, setName] = useState("");
@@ -86,15 +88,21 @@ function Admin() {
         } catch (e) { /* Error handled by hook */ }
     };
 
+    const filteredCourses = allCourses.filter(course => {
+        const matchesSearch = course.name.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesDept = filterDept === "All" || course.department === filterDept;
+        return matchesSearch && matchesDept;
+    });
+
     return (
-        <div>
+        <div className="admin-page">
             <h2>Admin Command Center</h2>
             <p style={{ marginBottom: "30px", fontSize: "1.1rem", color: "var(--text-muted)" }}>
                Oversee system-wide curriculum, enrollment health, and user distribution.
             </p>
 
             {/* Stats Ribbon */}
-            <div className="grid" style={{ gridTemplateColumns: "repeat(3, 1fr)", marginBottom: "40px" }}>
+            <div className="grid" style={{ marginBottom: "40px" }}>
                 <div className="card" style={{ padding: "20px", textAlign: "center", borderTop: "4px solid var(--primary)" }}>
                     <Users size={32} color="var(--primary)" style={{ margin: "0 auto 10px" }} />
                     <div style={{ fontSize: "2rem", fontWeight: "800" }}>{stats.students}</div>
@@ -146,18 +154,39 @@ function Admin() {
                 </div>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1.5fr 1fr", gap: "40px", alignItems: "start" }}>
+            <div className="admin-grid" style={{ gap: "40px", alignItems: "start" }}>
                 
                 {/* Course Management Table */}
                 <div className="container" style={{ padding: "40px", margin: 0 }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "30px", borderBottom: "1px solid rgba(255,255,255,0.05)", paddingBottom: "15px" }}>
-                        <Database size={24} color="var(--primary)" />
-                        <span style={{ fontWeight: "600", fontSize: "1.2rem" }}>Central Curriculum Ledger</span>
+                    <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center", gap: "20px", marginBottom: "30px", borderBottom: "1px solid rgba(255,255,255,0.05)", paddingBottom: "15px" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                            <Database size={24} color="var(--primary)" />
+                            <span style={{ fontWeight: "600", fontSize: "1.2rem" }}>Central Curriculum Ledger</span>
+                        </div>
+                        <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+                            <input 
+                                type="text" 
+                                placeholder="Search courses..." 
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                style={{ padding: "10px 15px", borderRadius: "8px", background: "rgba(15, 23, 42, 0.5)", border: "1px solid rgba(255,255,255,0.1)", color: "white", minWidth: "200px" }}
+                            />
+                            <select 
+                                value={filterDept}
+                                onChange={(e) => setFilterDept(e.target.value)}
+                                style={{ padding: "10px 15px", borderRadius: "8px", background: "rgba(15, 23, 42, 0.5)", border: "1px solid rgba(255,255,255,0.1)", color: "white" }}
+                            >
+                                <option value="All">All Departments</option>
+                                {DEPARTMENTS.map(dept => (
+                                    <option key={dept} value={dept}>{dept}</option>
+                                ))}
+                            </select>
+                        </div>
                     </div>
 
-                    {allCourses.length === 0 ? <p style={{ color: "var(--text-muted)" }}>No courses found.</p> : (
+                    {filteredCourses.length === 0 ? <p style={{ color: "var(--text-muted)" }}>No courses found.</p> : (
                         <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
-                            {allCourses.map(course => (
+                            {filteredCourses.map(course => (
                                 <div key={course.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: "rgba(255,255,255,0.03)", padding: "15px 20px", borderRadius: "12px", border: "1px solid rgba(255,255,255,0.05)" }}>
                                     <div>
                                         <div style={{ fontWeight: "600" }}>{course.name}</div>
