@@ -12,7 +12,7 @@ function Profile() {
         <div>
             <h2>Student Profile</h2>
             <p style={{ marginBottom: "30px", fontSize: "1.1rem", color: "var(--text-muted)" }}>
-               Manage your academic identity and account securityyy.
+               Manage your academic identity and account security.
             </p>
 
             <div className="profile-grid" style={{ gap: "40px", alignItems: "start" }}>
